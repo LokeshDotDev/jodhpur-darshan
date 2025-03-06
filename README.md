@@ -26,6 +26,7 @@ Jodhpur Darshan is a web application that provides a comprehensive guide to the 
 - comments on post
 - Create your own Vault for store the posts
 - All liked posts shown in the dashboard
+- Only Admin can post the posts
 
 ## Setup and Installation
 

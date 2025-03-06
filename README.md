@@ -75,4 +75,4 @@ This project uses Clerk for authentication, which has been fully customized to f
 
 ## Contributing
 
-We welcome contributions from the community. Please read our [contributing guidelines](CONTRIBUTING.md) for more information.
+We welcome contributions from the community.

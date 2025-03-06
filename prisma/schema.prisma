@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  username  String
+  email     String    @unique
+  clerkId   String?   @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  posts     Post[]    @relation("UserPosts")
+  vaults    Vault[]   @relation("UserVaults")
+  approvals Post[]    @relation("AdminApprovals")
+  comments  Comment[] @relation("UserComments")
+  likes     Like[]
+}
+
+model Post {
+  id           String      @id @default(cuid())
+  title        String
+  content      String
+  imageURL     String // Cloudinary URL
+  publicID     String      @unique // Cloudinary Public ID
+  createdBy    User        @relation("UserPosts", fields: [createdById], references: [id])
+  createdById  String
+  status       PostStatus? @default(PENDING) // PENDING, APPROVED, REJECTED
+  approvedBy   User?       @relation("AdminApprovals", fields: [approvedById], references: [id])
+  approvedById String?
+  comments     Comment[]
+  likes        Like[]
+  category     Category
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  vaults       Vault[]
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  text      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String
+  owner     User     @relation("UserComments", fields: [userId], references: [id])
+  userId    String
+  likes     Like[]
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  owner     User     @relation(fields: [userId], references: [id])
+  userId    String
+  post      Post?    @relation(fields: [postId], references: [id])
+  postId    String?
+  comment   Comment? @relation(fields: [commentId], references: [id])
+  commentId String?
+}
+
+model Vault {
+  id          String   @id @default(cuid())
+  name        String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  post        Post?    @relation(fields: [postId], references: [id])
+  postId      String?
+  owner       User     @relation("UserVaults", fields: [userId], references: [id])
+  userId      String
+}
+
+enum Category {
+  Landmarks
+  Lakes
+  Markets
+  Savours
+  Temples
+  Arts
+  Museum
+  Hotels
+}
+
+enum PostStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}

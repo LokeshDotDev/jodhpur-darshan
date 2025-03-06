@@ -13,6 +13,8 @@ Jodhpur Darshan is a web application that provides a comprehensive guide to the 
   - NeonDB - Postgresql with Prisma (ORM)
 - **Authentication:**
   - Clerk (fully customized)
+- **UI Library:**
+  - ShadCn UI Library (for pre-build components)
 
 ## Features
 
